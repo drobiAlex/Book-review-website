@@ -90,30 +90,30 @@ def registeration():
 
         # Ensure that user has provided correct data
         if not request.form.get("username"):
-            error = "You have provided uncorrect unsername"
+            error = "You have provided no unsername"
             return render_template("error.html", error=error)
 
         # Ensure that passwords are the same
-        elif request.form.get("password") == request.form.get("confirm_password"):
-            error = "Your password don't identical"
+        elif not request.form.get("password") == request.form.get("confirm_password"):
+            error = "Your passwords don't identical"
             return render_template("error.html", error=error)
 
-        username = request.form.get("username")
         # Check if username is uniqe in the database
-        result = db.execute("SELECT * FROM users WHERE user_name = :user_name", {"user_name": username})
+        result = db.execute("SELECT EXISTS (SELECT 1 FROM users WHERE username = :username)",
+                            {"username": request.form.get("username")})
 
-        if len(result) == 1:
+        if result == 1:
             error = "Username is occupaid"
             return render_template("error.html", error=error)
 
         # Add to the database login and hashed password
         else:
 
-            db.execute("INSER INTO users (username, hash) VALUES (:username, :hash)",
+            db.execute("INSERT INTO users (username, hash) VALUES (:username, :hash)",
                 {"username": request.form.get("username"), "hash": hash(request.form.get("password"))})
 
-            rows = db.execute("SELECT * FROM users WHERE user_name = :username",
-                {"username":username})
+            rows = db.execute("SELECT * FROM users WHERE username = :username",
+                {"username": request.form.get("username")})
 
             # Remember which user has logged in
             session["user_id"] = rows[0][1]
