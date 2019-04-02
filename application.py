@@ -1,7 +1,7 @@
 import os
 import csv
 
-from flask import Flask, session, render_template, request, redirect
+from flask import Flask, flash, session, render_template, request, redirect
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -12,6 +12,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 # postgres://tdvcbkhzabsenu:6264489a131e5565da3517bd12b5f7c2eeff8d5631efebfc66b65ebb1fde6d11@ec2-54-247-70-127.eu-west-1.compute.amazonaws.com:5432/d8tst0p3a5jflm
 # ciGC4lMaLH8yZ2DyCAgKw
+# https://github.com/marcorichetta/cs50w-project1/blob/master/application.py
 app = Flask(__name__)
 
 # Check for environment variable
@@ -134,5 +135,56 @@ def registeration():
     else:
         return render_template("register.html")
 
-if __name__ == '__main__':
-    main()
+
+@login_required
+@app.route("/search", methods=["GET"])
+def search():
+
+    # Ensure that user provide a data
+    if not request.args.get("search"):
+        error = "You don't provide anything"
+        return render_template("error.html", error=error)
+
+
+    # Complete search
+    else:
+
+        query = "%" + request.args.get("search") + "%"
+
+        # Search in database
+        rows = db.execute("SELECT isbn, title, author, year FROM books WHERE \
+        isbn LIKE :query OR\
+        title LIKE :query OR\
+        author LIKE :query LIMIT 15",
+        {
+        "query": query
+        })
+
+        # In case of no matched books
+        if rows.rowcount == 0:
+            error = "No book was found"
+            return render_template("error.html", error=error)
+
+        else:
+
+            # Return all books whitch match
+            books = rows.fetchall()
+            return render_template("search.html", books=books)
+
+
+@login_required
+@app.route("/book/<isbn>", methods=["GET"])
+def book(isbn):
+
+if request.method == "POST":
+    pass
+
+else:
+    
+    res = requests.get("https://www.goodreads.com/book/review_counts.json",
+                    params={"key": "ciGC4lMaLH8yZ2DyCAgKw", "isbns": "{}".format})
+
+
+
+'''
+'''

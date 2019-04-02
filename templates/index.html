@@ -4,14 +4,15 @@
 
 {% block main %}
 
-<form class="" action="/search" method="get">
 
+<form class="search" action="/search" method="get">
   <div class="form-group">
     <label class="col-form-label" for="inputDefault">Title, ISBN, or author name</label>
-    <input type="text" class="form-control" placeholder="Title/ISBN/author name..." id="inputDefault">
+    <input type="text" class="form-control" name="search" id="search" placeholder="Title/ISBN/author name...">
   </div>
   <div class="form-group">
     <button type="submit" class="btn btn-primary" name="button">Search</button>
   </div>
 </form>
+
 {% endblock %}
