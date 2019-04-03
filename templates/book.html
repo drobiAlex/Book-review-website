@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block main %}
+  <div class="container">
+    <div class="row">
+      <div class="col">
+      <div class="display-2 font-bold text-left"><p>{{book.title}}</p></div>
+      <div class="h1 text-left"><p>Author: <b>{{book.author}}</b></p></div>
+      <div class="h2 text-left"><p>Year: <b>{{book.year}}</b></p></div>
+      <div class="h3 text-left"><p>ISBN: <b>{{book.isbn}}</b></p></div>
+      <img class="float-left" src="../static/goodreads.png" alt="Goodreads" width="200" height="45" style="margin-right: 2.5em">
+      <div class="h3 text-left" style="margin-top: 1em"><p>Rating: <b>{{rating}}</b></p></div>
+      </div>
+
+      <div class="col-5">
+        <p></p>
+        <form class="search" method="post">
+          <fieldset>
+            <legend>Review</legend>
+            <div class="form-group text-left">
+              <label for="exampleSelect1">Your score</label>
+              <select class="form-control" name="score" id="exampleSelect1">
+                <option disabled="" selected="" value="">Rate this book</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+              <div class="form-group text-left">
+                <label for="exampleTextarea">Opinion: </label>
+                <grammarly-ghost spellcheck="false"><div data-id="b90203d6-97f4-21dc-7b88-88f6b90d6913" data-gramm_id="b90203d6-97f4-21dc-7b88-88f6b90d6913" data-gramm="gramm" data-gramm_editor="true" class="gr_ver_2" gramm="true" contenteditable="true" style="position: absolute; color: transparent; overflow: hidden; white-space: pre-wrap; border-radius: 0px; box-sizing: border-box; height: 80px; width: 540px; margin: 535px 0px 0px; padding: 6px 12px; z-index: 0; border-width: 1px; border-style: solid; background: none 0% 0% / auto repeat scroll padding-box padding-box rgb(255, 255, 255); top: 0px; left: 0px;"><span style="display: inline-block; font: 400 15px/22.5px &quot;Segoe UI&quot;, &quot;Source Sans Pro&quot;, Calibri, Candara, Arial, sans-serif; color: transparent; overflow: hidden; text-align: left; float: initial; clear: none; box-sizing: border-box; vertical-align: baseline; white-space: pre-wrap; width: 100%; margin: 0px; padding: 0px; border: 0px; letter-spacing: normal; text-shadow: none; height: 78px;"></span><br></div></grammarly-ghost><textarea class="form-control" name="opinion" id="exampleTextarea" rows="3" data-gramm="true" data-txt_gramm_id="b90203d6-97f4-21dc-7b88-88f6b90d6913" data-gramm_id="b90203d6-97f4-21dc-7b88-88f6b90d6913" spellcheck="false" data-gramm_editor="true" style="z-index: auto; position: relative; line-height: 22.5px; font-size: 15px; transition: none 0s ease 0s; background: transparent !important;"></textarea><grammarly-btn><div class="_1BN1N Kzi1t _2DJZN" style="z-index: 2; transform: translate(509px, 584.5px);"><div class="_1HjH7"><div title="Protected by Grammarly" class="_3qe6h">&nbsp;</div></div></div></grammarly-btn>
+                </div>
+          <fieldset class="form-group">
+            <button type="submit" class="btn btn-secondary">Submit</button>
+          </fieldset>
+          {% if reviews %}
+            {% for review in reviews %}
+        </form>
+        <div class="card bg-light" style="max-width: 30rem; margin-top: 20px">
+          <div class="card-header">Nickname: </div>
+          <div class="card-body">
+            <h4 class="card-title">Score: {{review.score}}</h4>
+            <p class="card-text">{{review.opinion}}</p>
+          </div>
+        </div>
+            {% endfor %}
+
+        {% else %}
+        <div class="h4 text-left"><p>No comments for this book.</p></div>
+        <div class="h4 text-left"><p>Be the first one!</p></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

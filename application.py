@@ -1,7 +1,8 @@
 import os
 import csv
+import requests
 
-from flask import Flask, flash, session, render_template, request, redirect
+from flask import Flask, flash, session, render_template, request, redirect, jsonify, abort
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -173,18 +174,88 @@ def search():
 
 
 @login_required
-@app.route("/book/<isbn>", methods=["GET"])
+@app.route("/book/<isbn>", methods=["GET", "POST"])
 def book(isbn):
 
-if request.method == "POST":
-    pass
+    if request.method == "POST":
 
-else:
-    
-    res = requests.get("https://www.goodreads.com/book/review_counts.json",
-                    params={"key": "ciGC4lMaLH8yZ2DyCAgKw", "isbns": "{}".format})
+        user = session["user_id"]
 
+        # Ensure that user provide any opinion and rate a book
+        if not request.form.get("opinion") or not request.form.get("score"):
+            error = "You haven't left any opinion and/or rate this book"
+            return render_template("error.html", error=error)
 
+        # Ensure that user has no previous comments
+        row2 = db.execute("SELECT * FROM reviews WHERE user_id = :user_id AND isbn_id = :isbn_id",
+                                                                    {
+                                                                    "user_id": user,
+                                                                    "isbn_id": isbn
+                                                                    })
 
-'''
-'''
+        if row2.rowcount == 1:
+            flash('You already submitted a review for this book', 'warning')
+            return redirect("/book/" + isbn)
+
+        # Send user score and opinion to the database
+        else:
+
+            score = request.form.get("score")
+            opinion = request.form.get("opinion")
+
+            db.execute("INSERT INTO reviews (score, opinion, user_id, isbn_id) VALUES (:score, :opinion, :user_id, :isbn_id)",
+                                                                                        {
+                                                                                        "score": score,
+                                                                                        "opinion": opinion,
+                                                                                        "user_id": session["user_id"],
+                                                                                        "isbn_id": isbn
+                                                                                        })
+            db.commit()
+
+            reviews = db.execute("SELECT opinion, score FROM reviews WHERE isbn_id = :isbn_id",
+                                                                            {
+                                                                            "isbn_id": isbn
+                                                                            }).fetchall()
+
+            book = db.execute("SELECT isbn, title, year, author FROM books WHERE isbn = :isbn",
+                                                                                {
+                                                                                "isbn": isbn
+                                                                                }).fetchone()
+
+            return render_template("book.html", book=book, reviews=reviews)
+
+    # Open book by click
+    else:
+
+        book = db.execute("SELECT isbn, title, year, author FROM books WHERE isbn = :isbn",
+                        {
+                        "isbn": isbn
+                        }).fetchone()
+
+        # Make a request to the server
+        res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "ciGC4lMaLH8yZ2DyCAgKw", "isbns": "{0}".format(isbn)})
+        res = res.json()
+        rating = res['books'][0]['average_rating']
+
+        reviews = db.execute("SELECT opinion, score FROM reviews WHERE isbn_id = :isbn_id",
+                                                                        {
+                                                                        "isbn_id": isbn
+                                                                        }).fetchall()
+
+        return render_template("book.html", book=book, reviews=reviews, rating=rating)
+
+@app.route("/api/<isbn>", methods=["GET"])
+@login_required
+def api_respond(isbn):
+
+    try:
+        row = db.execute("SELECT title, year, author, isbn FROM books WHERE isbn = :isbn",
+                                                                            {
+                                                                            "isbn": isbn
+                                                                            }).fetchone()
+
+        result = dict(row.items())
+        return jsonify(result)
+    except:
+        abort(404)
+        print("it was aborted")
