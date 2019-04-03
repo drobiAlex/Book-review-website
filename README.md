@@ -1,4 +1,4 @@
-# Project 1
+# CS50Web programming - Project 1
 
 Web Programming with Python and JavaScript
 
