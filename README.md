@@ -7,9 +7,11 @@ Find what you need and read it.
 
 Just do it! 
 
-<img width="1590" alt="Screenshot 2019-04-03 at 19 56 57" src="https://user-images.githubusercontent.com/31101295/55501611-17012e00-564b-11e9-95ef-04d354c6187b.png">
-<img width="1590" alt="Screenshot 2019-04-03 at 19 57 08" src="https://user-images.githubusercontent.com/31101295/55501612-1799c480-564b-11e9-97ce-64d9190dfffb.png">
+
 <img width="1590" alt="Screenshot 2019-04-03 at 19 55 48" src="https://user-images.githubusercontent.com/31101295/55501613-1799c480-564b-11e9-800e-e569bd613f75.png">
+<img width="1590" alt="Screenshot 2019-04-03 at 19 57 08" src="https://user-images.githubusercontent.com/31101295/55501612-1799c480-564b-11e9-97ce-64d9190dfffb.png">
+<img width="1590" alt="Screenshot 2019-04-03 at 19 56 57" src="https://user-images.githubusercontent.com/31101295/55501611-17012e00-564b-11e9-95ef-04d354c6187b.png">
+
 
 # Usage
 Register
