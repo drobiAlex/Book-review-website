@@ -9,11 +9,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from helpers import login_required
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-
-
-# postgres://tdvcbkhzabsenu:6264489a131e5565da3517bd12b5f7c2eeff8d5631efebfc66b65ebb1fde6d11@ec2-54-247-70-127.eu-west-1.compute.amazonaws.com:5432/d8tst0p3a5jflm
-# ciGC4lMaLH8yZ2DyCAgKw
-# https://github.com/marcorichetta/cs50w-project1/blob/master/application.py
+§
 app = Flask(__name__)
 
 # Check for environment variable
